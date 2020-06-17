@@ -27,6 +27,7 @@
   },
   "dependencies": {
     "@google-cloud/language": "^4.1.0",
-    "discord.js": "^12.2.0"
+    "discord.js": "^12.2.0",
+    "mongoose": "^5.9.19"
   }
 }

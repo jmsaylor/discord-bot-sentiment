@@ -3,6 +3,7 @@ const client = new Discord.Client();
 const { prefix, token } = require("./config");
 const language = require("@google-cloud/language");
 const languageClient = new language.LanguageServiceClient();
+const mongoose = require("mongoose");
 
 client.login(token);
 
@@ -11,10 +12,25 @@ client.on("ready", () => {
 });
 
 client.on("message", async (msg) => {
-  console.dir(msg);
+  //   console.dir(msg);
   try {
-    const score = await getSentiment(msg.content);
-    msg.reply(`Your negativity/positivity score is: ${score}`);
+    console.log(msg.author.bot);
+    if (!msg.author.bot) {
+      const score = await getSentiment(msg.content);
+
+      //User Interaction
+      msg.reply(`Your negativity/positivity score is: ${score}`);
+
+      //Console Monitoring
+      console.log(msg.content);
+      console.log(score);
+
+      //Store in DB
+      const record = {
+        text: msg.content,
+        score: score,
+      };
+    }
   } catch (error) {
     console.error(error);
   }
