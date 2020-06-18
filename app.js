@@ -20,23 +20,20 @@ connectDB();
 client.on("message", async (msg) => {
   //   console.dir(msg);
   try {
-    if (msg.channel.id === "700448274703712346") {
-      console.log("match");
-      if (!msg.author.bot) {
-        const score = await getSentiment(msg.content);
+    if (!msg.author.bot && msg.channel.id === "700448274703712346") {
+      const score = await getSentiment(msg.content);
 
-        //Store in DB
-        Record.create(
-          {
-            text: msg.content,
-            score: score,
-            user: msg.author.id,
-          },
-          (err, record) => {
-            if (err) throw err;
-          }
-        );
-      }
+      //Store in DB
+      Record.create(
+        {
+          text: msg.content,
+          score: score,
+          user: msg.author.id,
+        },
+        (err, record) => {
+          if (err) throw err;
+        }
+      );
     }
   } catch (error) {
     console.error(error);
