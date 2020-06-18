@@ -1,35 +1,42 @@
 const Discord = require("discord.js");
 const client = new Discord.Client();
-const { prefix, token } = require("./config");
+const { prefix, token } = require("./config/config");
+const connectDB = require("./config/db");
 const language = require("@google-cloud/language");
 const languageClient = new language.LanguageServiceClient();
 const mongoose = require("mongoose");
+const Record = require("./models/Record");
 
+//Discord Login
 client.login(token);
 
 client.on("ready", () => {
   console.log(`You are ${client.user.tag}!`);
 });
 
+//MongoDB Login
+connectDB();
+
 client.on("message", async (msg) => {
   //   console.dir(msg);
   try {
-    console.log(msg.author.bot);
-    if (!msg.author.bot) {
-      const score = await getSentiment(msg.content);
+    if (msg.channel.id === "700448274703712346") {
+      console.log("match");
+      if (!msg.author.bot) {
+        const score = await getSentiment(msg.content);
 
-      //User Interaction
-      msg.reply(`Your negativity/positivity score is: ${score}`);
-
-      //Console Monitoring
-      console.log(msg.content);
-      console.log(score);
-
-      //Store in DB
-      const record = {
-        text: msg.content,
-        score: score,
-      };
+        //Store in DB
+        Record.create(
+          {
+            text: msg.content,
+            score: score,
+            user: msg.author.id,
+          },
+          (err, record) => {
+            if (err) throw err;
+          }
+        );
+      }
     }
   } catch (error) {
     console.error(error);
