@@ -17,10 +17,12 @@ client.on("ready", () => {
 //MongoDB Login
 connectDB();
 
+listeningTo = "700053942482239641"; //input Discord channel ID
+
 client.on("message", async (msg) => {
   //   console.dir(msg);
   try {
-    if (!msg.author.bot && msg.channel.id === "700448274703712346") {
+    if (!msg.author.bot && msg.channel.id === listeningTo) {
       const score = await getSentiment(msg.content);
 
       //Store in DB
@@ -28,7 +30,7 @@ client.on("message", async (msg) => {
         {
           text: msg.content,
           score: score,
-          user: msg.author.id,
+          // user: msg.author.id,
         },
         (err, record) => {
           if (err) throw err;
